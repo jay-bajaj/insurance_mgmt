@@ -1,0 +1,19 @@
+{
+  "name": "insurance_mgmt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jay-bajaj/insurance_mgmt.git"
+  },
+  "author": "jay_bajaj",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jay-bajaj/insurance_mgmt/issues"
+  },
+  "homepage": "https://github.com/jay-bajaj/insurance_mgmt#readme"
+}
