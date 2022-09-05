@@ -2,7 +2,7 @@
   "name": "insurance_mgmt",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/jay-bajaj/insurance_mgmt/issues"
   },
-  "homepage": "https://github.com/jay-bajaj/insurance_mgmt#readme"
+  "homepage": "https://github.com/jay-bajaj/insurance_mgmt#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mysql": "^2.18.1"
+  }
 }
