@@ -4,38 +4,39 @@ CREATE DATABASE insurance_mgmt;
 CREATE TABLE admins (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
     name VARCHAR(50) NOT NULL,
-    contact INT ,
-    email VARCHAR(50),
-
+    contact VARCHAR(30),
+    email VARCHAR(50)
 );
 
 CREATE TABLE employee (
     system_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
     name VARCHAR(50) NOT NULL, 
-    contact INT,
+    contact VARCHAR(30),
     email VARCHAR(50)
 );
 
 CREATE TABLE agent (
+    name VARCHAR(50),
     system_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    commission INT DEFAULT 0
+    company_id INT NOT NULL,
+    commission DECIMAL(3,2) DEFAULT 0,
+    FOREIGN KEY (company_id) REFERENCES company(id)
 );
-
-
 
 CREATE TABLE insurancepolicy(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    company_name VARCHAR(50) ,
-    type VARCHAR(50) NOT NULL DEFAULT 'MISC',
-    agent_id INT NOT NULL 
-);
+    policytype VARCHAR(50) NOT NULL DEFAULT 'MISC',
+    duration INT NOT NULL,
+    policyvalue BIGINT NOT NULL
+  );
 
 CREATE TABLE client (
     id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    contact INT, 
+    contact VARCHAR(30), 
     address VARCHAR(250),
-    email VARCHAR(50)
+    email VARCHAR(50),
+    created_at TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE agent_client(
@@ -46,10 +47,31 @@ CREATE TABLE agent_client(
     FOREIGN KEY (client_id) REFERENCES client(id)
 );
 
-CREATE TABLE client_insurancepolicy(
+CREATE TABLE client_policy(
     client_id INT NOT NULL ,
     policy_id INT NOT NULL,
-    PRIMARY KEY(client_id,insurancepolicy_id),
+    agent_id INT NOT  NULL,
+    PRIMARY KEY(client_id,policy_id,agent_id),
     FOREIGN KEY (client_id) REFERENCES client(id),
-    FOREIGN KEY (policy_id) REFERENCES insurancepolicy(id)
+    FOREIGN KEY (policy_id) REFERENCES insurancepolicy(id),
+    FOREIGN KEY (agent_id) REFERENCES agent(system_id)
 );
+
+CREATE TABLE company(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+ );
+
+ CREATE TABLE agent_policy(
+     agent_id INT NOT NULL,
+     policy_id INT NOT NULL,
+     PRIMARY KEY (agent_id,policy_id)
+ );
+
+ CREATE TABLE company_policy (
+    company_id INT NOT NULL,
+    policy_id INT NOT NULL,
+    PRIMARY KEY (company_id,policy_id),
+    FOREIGN KEY (company_id) REFERENCES company(id),
+    FOREIGN KEY (policy_id) REFERENCES insurancepolicy(id)
+ )

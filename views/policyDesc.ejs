@@ -1,0 +1,16 @@
+<h1><%= type%> Insurances</h1>
+
+<p>
+    <% for(var i=0;i< policies.length;i++){%>
+    <ul>
+        <li> 
+            <div>Policy id: <%=policies[i].policy_id%></div>
+
+            Duration of policy is <%=policies[i].duration%> months
+        And The The sum value is Rs. <%=policies[i].policyvalue%></li>
+        <ul>
+            <li>Agent: <%=policies[i].name%>, Contact: <%=policies[i].email%></li>
+        </ul>
+    </ul>
+    <%}%>
+</p>

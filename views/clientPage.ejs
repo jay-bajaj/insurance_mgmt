@@ -1,0 +1,44 @@
+
+
+<h1>Hello Mr./Ms. <%=name%> </h1>
+
+<h2>Your policies</h2>
+
+<p>
+    <ul>
+        <% for(var i=0;i< data.length ;i++){ %>
+
+        <li>
+            <div> Policy id: <%= data[i].policy_id%></div>
+            <div> Polciytype: <%=data[i].policytype%></div>
+            <div> Duration: <%= data[i].duration%></div>
+            <div> Amount: <%= data[i].policyvalue%></div>
+        </li>
+        <%}%>
+    </ul>
+</p>
+
+<h3> Policy type needed </h3>
+<form method="GET" action="/particular">
+    <input type="hidden" name="clientId" value="<%= password%>">
+<select class="picker" name="picker" >
+    <option value="select" id="none" selected></option>
+    <% for(var i =0;i<types.length;i++){ %>
+
+    <option value="<%= types[i]%>" id="<%= types[i]%>"><%= types[i]%> Insurance</option>
+    <%}%>
+
+</select>
+
+<input type="submit" value="Find Policies">
+
+</form>
+
+<!-- <script type="text/javascript">
+    function update(){
+        var element = document.getElementById('type');
+        // if(element.)
+        console.log(element);
+    }
+    update();
+</script> -->
