@@ -1,20 +1,29 @@
-
-
 <h1>Hello Mr./Ms. <%=name%> </h1>
 
 <h2>Your policies</h2>
 
 <p>
     <ul>
+        <div><%if(data.length==0){ %>
+            <p> You dont have any policies right now</p>
+         <% } %>
+         </div>
         <% for(var i=0;i< data.length ;i++){ %>
 
         <li>
+            
             <div> Policy id: <%= data[i].policy_id%></div>
             <div> Polciytype: <%=data[i].policytype%></div>
+            
             <div> Duration: <%= data[i].duration%></div>
             <div> Amount: <%= data[i].policyvalue%></div>
+            
+            <div>Next due in <%= dates[i].getDate()%>/<%=(dates[i].getMonth()+1)%>/<%=dates[i].getFullYear()%></div>
+            
         </li>
+    
         <%}%>
+    
     </ul>
 </p>
 
@@ -35,10 +44,16 @@
 </form>
 
 <!-- <script type="text/javascript">
-    function update(){
-        var element = document.getElementById('type');
-        // if(element.)
-        console.log(element);
+    function toggle(){
+        var element = document.getElementById("policy desc");
+        if(element.style.display=="none")
+        {
+            element.style.display="block";
+        }
+        else{
+            element.style.display="none";
+            }
+        console.log(element.style);
     }
-    update();
+    // update();
 </script> -->

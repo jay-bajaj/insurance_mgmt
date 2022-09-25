@@ -51,6 +51,7 @@ CREATE TABLE client_policy(
     client_id INT NOT NULL ,
     policy_id INT NOT NULL,
     agent_id INT NOT  NULL,
+    enrolled_on TIMESTAMP NOT NULL DEFAULT NOW(),
     PRIMARY KEY(client_id,policy_id,agent_id),
     FOREIGN KEY (client_id) REFERENCES client(id),
     FOREIGN KEY (policy_id) REFERENCES insurancepolicy(id),

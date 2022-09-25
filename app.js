@@ -89,18 +89,35 @@ app.get('/particular', function(req,res){
     });
 });
 
+
+var dates =[]
+// = new Date();
+
+
 app.post('/login',(req,res)=>{
     var q = "SELECT * FROM insurancepolicy JOIN client_policy ON insurancepolicy.id = client_policy.policy_id  JOIN client ON client.id = client_policy.client_id WHERE client_id=?";
     connection.query(q,req.body.userid, (err,results)=>{
         // console.log(results);
         connection.query('SELECT * FROM client WHERE id=?',req.body.userid, function(error,results2){
-            console.log(results2);
+            console.log(results.length);
+            var temp = new Date();
+            temp.setDate(temp.getDate()+ 40);
+            for(var k= 0;k<results.length;k++){
+                var d = new Date() ;
+                var passedDays= (d.getTime() -results[k].enrolled_on.getTime() )/1000/60/60/24;
+                passedDays = Math.floor(passedDays);
+                var remDays = 180 - passedDays%180;
+                d.setDate(d.getDate()+remDays);
+                dates.push(d);
+            }
+            
             if(results2[0].name==req.body.name){
                 res.render('clientPage',{
                     name: req.body.name,
                     password: req.body.userid,
                     types: types,
-                    data: results
+                    data: results,
+                    dates: dates
                 });
             }
             else {
@@ -125,7 +142,7 @@ app.post('/signup', function(req,res){
     if(err)console.log(err);
     console.log(results);
     res.redirect('/');
-    })
+    });
 });
 
 
