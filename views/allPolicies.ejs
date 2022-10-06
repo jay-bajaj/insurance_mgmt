@@ -1,0 +1,31 @@
+<h1>List of existing policies</h1>
+
+
+    <table>
+        <tr>
+           <th>Company</th><th>Policy Type</th><th>Duration of Policy</th><th>Policy Sum Value</th><th>Agent Name</th>
+        </tr>
+     
+        <% for (var i = 0; i < results.length;  i++) { %>
+         <tr>
+           <td><%= results[i].name %></td>
+           <td><%= results[i].policytype %></td>
+           <td><%= results[i].duration %></td>
+           <td><%= results[i].policyvalue %></td>
+           <td><%= results[i].agent_name %></td>
+         </tr>    
+        <% } %>
+     </table>
+
+     <form method="POST" action="/addPolicy">
+        <input type="text" name="company" placeholder="company name">
+        <input type="text" name="agent" placeholder="agent name">
+        <input type="text" name="policytype" placeholder="policy type">
+        <input type="number" name="duration" placeholder="policy duration in months">
+        <input type="number" name="policyvalue" placeholder="total sum of policy">
+        <input type="submit" value="Add New Policy">
+     </form>
+
+     
+
+     

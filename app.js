@@ -1,17 +1,19 @@
 var mysql = require('mysql');
 const {faker} = require('@faker-js/faker');
-// var popups =require('popups');
+
+var nodemailer = require('nodemailer');
 
 var express = require('express');
 
 var bodyParser=require("body-parser");
 
 var connection = mysql.createConnection({
+
     host : 'localhost',
     user : 'root',
     password : '23-May-00',
     database : 'insurance_mgmt',
-    
+    multipleStatements: true,
 });
 
 var app = express();
@@ -52,7 +54,6 @@ var months = [24,36,60,120]
 
 
 app.get("/",function(req,res){
-    // res.send("Start from this page");
     res.render('home');
 });
 
@@ -62,7 +63,12 @@ app.get("/register",function(req,res){
 
 app.get("/agent_login", (req,res)=>{
     res.render('agentLogin');
+});
+
+app.get("/admin_login", (req,res)=>{
+    res.render('adminLogin');
 })
+
 
 app.get('/particular', function(req,res){
     // console.log(req);
@@ -99,7 +105,7 @@ app.post('/login',(req,res)=>{
     connection.query(q,req.body.userid, (err,results)=>{
         // console.log(results);
         connection.query('SELECT * FROM client WHERE id=?',req.body.userid, function(error,results2){
-            console.log(results.length);
+            // console.log(results.length);
             var temp = new Date();
             temp.setDate(temp.getDate()+ 40);
             for(var k= 0;k<results.length;k++){
@@ -131,6 +137,54 @@ app.post('/login',(req,res)=>{
     
     // console.log(req.body);
 });
+
+app.get('/adminLogin', (req,res)=>{
+    var q = 'SELECT company.name,policytype,duration,policyvalue,agent.name AS agent_name FROM company JOIN company_policy ON company.id=company_policy.company_id JOIN insurancepolicy ON insurancepolicy.id = company_policy.policy_id JOIN agent_policy ON agent_policy.policy_id=insurancepolicy.id JOIN agent ON agent.system_id = agent_policy.agent_id'
+    connection.query(q,(err,results)=>{
+        res.render('allPolicies',
+        {results: results}
+        );
+        // console.log(results);
+    })
+});
+
+app.post('/addPolicy',(req,res)=>{
+    // console.log(req);
+
+    var companyname = req.body.company;
+    var agentname = req.body.agent;
+    var newpolicy ={
+        policytype: req.body.policytype,
+        duration: req.body.duration,
+        policyvalue: req.body.policyvalue,
+    };
+
+    q2 = 'SELECT system_id FROM agent_policy JOIN agent ON agent.system_id=agent_policy.agent_id WHERE agent.name = ? ;';
+    q2+= 'SELECT COUNT(*) AS count FROM insurancepolicy;';
+    q2+= `SELECT id  FROM company WHERE company.name = ?;`
+    connection.query(q2,[agentname,companyname], (error, results1)=>{
+        if(error)console.log(error);
+        var newpolicyid = results1[1][0].count+1;
+        var policyagentid = results1[0][0].system_id;
+        console.log(results1);
+        var agpol = {policy_id: newpolicyid,agent_id: policyagentid};
+        connection.query('INSERT INTO insurancepolicy SET ?',newpolicy, (err2,results2)=>{
+            if(err2)console.log(err2);
+            console.log(results2);
+            connection.query("INSERT INTO agent_policy SET ? ",agpol,(err3,results3)=>{
+                if(err3)console.log(err3);
+                console.log(results3);
+                connection.query("INSERT INTO company_policy SET ?",{company_id: results1[2][0].id,policy_id: newpolicyid}, (err4, results4)=>{
+                    if(err4)console.log(err4);
+                    console.log(results4);
+                    res.redirect('/adminLogin');
+                    var q = 'SELECT company.name,policytype,duration,policyvalue,agent.name AS agent_name FROM company JOIN company_policy ON company.id=company_policy.company_id JOIN insurancepolicy ON insurancepolicy.id = company_policy.policy_id JOIN agent_policy ON agent_policy.policy_id=insurancepolicy.id JOIN agent ON agent.system_id = agent_policy.agent_id'
+                });
+            });
+        });
+    });
+});
+
 app.post('/signup', function(req,res){
     var person = {
         name: req.body.name_field,

@@ -11,12 +11,17 @@
         <ul>
             <li>Agent: <%=policies[i].name%>, 
                 Contact: <%=policies[i].email%></li>
+                <button onclick="Notify('<%=policies[i].email%>')">Interested</button>
+            </ul>
         </ul>
-        <button onclick="Notify()">Interested</button>
-    </ul>
-    <%}%>
-</p>
+        <%}%>
+    </p>
+    <p id="notification"></p>
 
 <script>
-    
+    function Notify(email){
+        console.log("sent email to "+email);
+        document.getElementById("notification").innerHTML="email sent to "+email;
+        // document.getElementById('notification').disabled = true;
+    }
 </script>
