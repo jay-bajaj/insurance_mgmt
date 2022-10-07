@@ -66,7 +66,9 @@ CREATE TABLE company(
  CREATE TABLE agent_policy(
      agent_id INT NOT NULL,
      policy_id INT NOT NULL,
-     PRIMARY KEY (agent_id,policy_id)
+     PRIMARY KEY (agent_id,policy_id),
+     FOREIGN KEY (policy_id) REFERENCES insurancepolicy(id),
+     FOREIGN KEY (agent_id) REFERENCES agent(system_id),
  );
 
  CREATE TABLE company_policy (
@@ -75,4 +77,15 @@ CREATE TABLE company(
     PRIMARY KEY (company_id,policy_id),
     FOREIGN KEY (company_id) REFERENCES company(id),
     FOREIGN KEY (policy_id) REFERENCES insurancepolicy(id)
- )
+ );
+
+ CREATE TABLE request (
+    client_id INT NOT NULL ,
+    agent_id INT NOT NULL,
+    policy_id INT NOT NULL,
+    requested_at TIMESTAMP DEFAULT NOW(),
+    PRIMARY KEY (client_id,policy_id);
+    FOREIGN KEY (client_id) REFERENCES client(id),
+    FOREIGN KEY (agent_id) REFERENCES agent(system_id),
+    FOREIGN KEY (policy_id) REFERENCES insurancepolicy(id)
+ );

@@ -1,0 +1,26 @@
+<head>
+    <style>
+        table,th,td {
+            border : 1px solid black;
+        }
+    </style>
+</head>
+<h1> HEllo agent <%=name%></h1>
+
+<table>
+    <th>Client Name</th><th>Client Contact</th><th>Policy id req</th><th>Policy type</th><th>Policy Sum Value</th><th>Requested at</th><th>If payment done</th>
+    <% for(var i=0;i < data.length; i++){%>
+    <tr>
+        <td><%= data[i].name %></td><td><%= data[i].email %></td><td><%= data[i].policy_id %></td><td><%= data[i].policytype %></td><td><%= data[i].policyvalue %></td><td><%= data[i].requested_at %></td><td>
+            <form action="/assignPolicy" method="POST">
+                <input type="hidden" name="client_id" value="<%= data[i].client_id %>">
+                <input type="hidden" name="policy_id" value="<%= data[i].policy_id %>">
+                <input type="hidden" name="agent_id" value="<%= data[i].system_id %>">
+                <input type="hidden" name="username" value="<%= name %>">
+                <input type="hidden" name="password" value="<%= password %>">
+                <button type="submit">Assign</button>
+            </form>
+        </td>
+    </tr> 
+    <%}%>
+</table>
