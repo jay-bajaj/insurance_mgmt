@@ -22,8 +22,11 @@ app.set("view engine","ejs");
 app.use(bodyParser.urlencoded({extended:true}));
 
 
-var people = [];
 var commissions = [0.1,0.15];
+var company = ["LIC","BAJAJ ALLIANZ","TATA AIG"];
+var types = ["Car","Home","General","Life","Business","Phone","Travel"]
+var amounts = [500000,1000000,10000000,20000000];
+var months = [24,36,60,120]
 
 var clients = []
 // client template
@@ -37,8 +40,8 @@ for(var i= 0;i<50;i++){
     ]);   
 };
 
-var company = ["LIC","BAJAJ ALLIANZ","TATA AIG"];
-// agent template 
+var people = [];
+// agent(creating people) template 
 for(var i= 0;i<4;i++){
     people.push([
         faker.name.firstName(),
@@ -47,9 +50,16 @@ for(var i= 0;i<4;i++){
     ]);   
 };
 
-var types = ["Car","Home","General","Life","Business","Phone","Travel"]
-var amounts = [500000,1000000,10000000,20000000];
-var months = [24,36,60,120]
+var policies =[]
+// policy template
+for(var i= 0;i<30;i++){
+    policies.push([
+        types[Math.floor(Math.random()*types.length)],
+        amounts[Math.floor(Math.random()*amounts.length)],
+        months[Math.floor(Math.random()*months.length)]
+    ]);   
+};
+
 
 app.get("/",function(req,res){
     res.render('home');
@@ -168,6 +178,7 @@ app.post('/agentLogin', (req,res)=>{
     // var q = 'SELECT * FROM agent_policy JOIN insurancepolicy ON policy_id = insurancepolicy'
     // connection.query()s
 });
+
 app.post('/assignPolicy',(req,res)=>{
     var q = 'INSERT INTO client_policy SET ?;'
     // q+= 'INSERT INTO '
@@ -225,17 +236,13 @@ app.post('/addPolicy',(req,res)=>{
                 console.log("empty set");
                 connection.query('SELECT system_id FROM agent WHERE name = ?',agentname,(err5,res5)=>{
                     if(err5)console.log(err5);
-                    // console.log("res5  s")
-                    // console.log(res5[0].system_id);
                     policyagentid=res5[0].system_id;
                 var agpol = {policy_id: newpolicyid,agent_id: policyagentid};
 
                     connection.query("INSERT INTO agent_policy SET ? ",agpol,(err3,results3)=>{
                         if(err3)console.log(err3);
-                        // console.log(results3);
                         connection.query("INSERT INTO company_policy SET ?",{company_id: results1[2][0].id,policy_id: newpolicyid}, (err4, results4)=>{
                             if(err4)console.log(err4);
-                            // console.log(results4);
                             res.redirect('/adminLogin');
                             });
                     });
@@ -245,21 +252,17 @@ app.post('/addPolicy',(req,res)=>{
                 policyagentid = results1[0][0].system_id;
                 var agpol = {policy_id: newpolicyid,agent_id: policyagentid};
 
-                // console.log("policyagentid===",policyagentid)
                 connection.query("INSERT INTO agent_policy SET ? ",agpol,(err3,results3)=>{
                     if(err3)console.log(err3);
-                    // console.log(results3);
                     connection.query("INSERT INTO company_policy SET ?",{company_id: results1[2][0].id,policy_id: newpolicyid}, (err4, results4)=>{
                         if(err4)console.log(err4);
-                        // console.log(results4);
                         res.redirect('/adminLogin');
                         // var q = 'SELECT company.name,policytype,duration,policyvalue,agent.name AS agent_name FROM company JOIN company_policy ON company.id=company_policy.company_id JOIN insurancepolicy ON insurancepolicy.id = company_policy.policy_id JOIN agent_policy ON agent_policy.policy_id=insurancepolicy.id JOIN agent ON agent.system_id = agent_policy.agent_id'
                     });
                 });
             }
+        });
     });
-});
-
 });
 
 app.post('/signup', function(req,res){
@@ -271,7 +274,6 @@ app.post('/signup', function(req,res){
     }
     connection.query('INSERT INTO client SET ?',person,(err,results)=>{
     if(err)console.log(err);
-    // console.log(results);
     res.redirect('/');
     });
 });
@@ -279,27 +281,6 @@ app.post('/signup', function(req,res){
 app.listen(3000,'localhost', ()=>{
     console.log("App listening on port 3000");
 });
-
-// var company = []
-
-// //company template
-// for(var i= 0;i<3;i++){
-//     company.push([
-//         faker.company.name(),
-//     ]);
-// };
-
-
-
-var policies =[]
-// policy template
-for(var i= 0;i<30;i++){
-    policies.push([
-        types[Math.floor(Math.random()*types.length)],
-        amounts[Math.floor(Math.random()*amounts.length)],
-        months[Math.floor(Math.random()*months.length)]
-    ]);   
-};
 
 //adding clients randomly
 // connection.query("INSERT INTO client (name,contact,address,email,created_at) VALUES ?",[clients], 
@@ -329,4 +310,3 @@ for(var i= 0;i<30;i++){
 // console.log(people);
 
 connection.close;
-// console.log("hello");

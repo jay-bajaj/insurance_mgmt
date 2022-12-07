@@ -28,3 +28,8 @@ $$
 
 DELIMITER ;
 
+
+IF NOT NULL (SELECT client_id,policy_id FROM client_policy WHERE client_id=1 AND policy_id=3 )
+BEGIN
+    INSERT INTO request (client_id,agent_id,policy_id) VALUES (1,1,3)
+END
